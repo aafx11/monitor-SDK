@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>前端监控sdk</title>
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="content" style="width: 600px;word-wrap: break-word;">
+      <input id="JsError" type="button" value="抛出js错误" onclick="clickJsError()" />
+      <input type="button" value="抛出promise错误" onclick="clickPromiseError()" />
+      <input id="successBtn" type="button" value="ajax成功请求" onclick="clickSendSuccess()" />
+      <input id="errorBtn" type="button" value="ajax失败请求" onclick="clickSendError()" />
+    </div>
+  </div>
+  <script>
+    function clickJsError (params) {
+      window.someVar.error = 'error'
+    }
+    function clickPromiseError (params) {
+      new Promise((resolve, reject) => {
+        window.someVar.error = 'error'
+      })
+    }
+    function clickSendSuccess (params) {
+      let xhr = new XMLHttpRequest
+      xhr.open('GET', '/success', true)
+      xhr.responseType = 'json'
+      xhr.onload = function (params) {
+        console.log(xhr.response);
+      }
+      xhr.send()
+    }
+    function clickSendError (params) {
+      let xhr = new XMLHttpRequest
+      xhr.open('POST', '/error', true)
+      xhr.responseType = 'json'
+      xhr.onerror = function (error) {
+        console.log(error);
+      }
+      xhr.send("name=1")
+    }
+    // let content = document.getElementsByClassName('content')[0]
+    // content.innerHTML = '<span>@<span>'.repeat(10000)
+    // dom解析完成后触发，即使依赖的css，js资源还没加载完
+    // document.addEventListener('DOMContentLoaded', () => {
+    //   let start = Date.now()
+    //   while ((Date.now() - start) > 1000) {
+    //     console.log(1);
+    //   }
+    // })
+
+    setTimeout(() => {
+      let content = document.getElementById('container')
+      let h1 = document.createElement('h1')
+      h1.innerHTML = '有意义的内容'
+      h1.setAttribute('elementtiming', 'meaningful')
+      content.appendChild(h1)
+    }, 2000);
+  </script>
+
+  <script src="someError.js"></script>
+</body>
+
+</html>
